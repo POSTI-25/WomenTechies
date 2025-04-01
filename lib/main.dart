@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'user.dart';
 import 'driver.dart';
+import 'map.dart';
 
 void main() {
   runApp(MyApp());
@@ -45,11 +46,19 @@ class HomePage extends StatelessWidget {
               },
               child: Text('Driver Login'),
             ),
+            SizedBox(height: 20), // Add spacing
+            ElevatedButton( // Add this new button
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapPage()),
+                );
+              },
+              child: Text('View Map'),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-
