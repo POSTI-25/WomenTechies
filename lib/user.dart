@@ -60,29 +60,19 @@ class UserLoginPage extends StatefulWidget {
 class _UserLoginPageState extends State<UserLoginPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
-<<<<<<< HEAD
+  final TextEditingController _genderController = TextEditingController();
   LocationService user_loc= LocationService(); // Initialize location service
   // URL of your Flask backend
   final String apiUrl = 'http://172.17.214.224:5000/add_user';  // Replace with your Flask server's IP if testing on a device
-=======
-  final TextEditingController _genderController = TextEditingController();
-
-  // URL of your Flask backend
-  final String apiUrl = 'http://localhost:5000/add_user';  // Replace with your Flask server's IP if testing on a device
->>>>>>> bca4bcb8467a83e636b36c3fe78248e09a0e22f2
 
   // Function to send data to the Flask backend
   Future<void> _submit() async {
     String name = _nameController.text;
     String age = _ageController.text;
-<<<<<<< HEAD
     double long=user_loc.longitude;
     double lat=user_loc.latitude;
-     // Get the last known location
-=======
     String gender = _genderController.text;
 
->>>>>>> bca4bcb8467a83e636b36c3fe78248e09a0e22f2
     // Validate input
     if (name.isEmpty || age.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter both name and age")));
@@ -97,12 +87,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
         body: json.encode({
           'name': name,
           'age': age,
-<<<<<<< HEAD
           'long': long,
           'lat': lat,
-=======
           'gender' : gender,
->>>>>>> bca4bcb8467a83e636b36c3fe78248e09a0e22f2
         }),
       );
 

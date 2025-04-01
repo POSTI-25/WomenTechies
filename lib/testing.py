@@ -25,12 +25,8 @@
 import sqlite3
 import threading
 
-<<<<<<< HEAD
-DATABASE = 'users.db'  # Replace with your actual SQLite database file
-=======
 DATABASE_USER = 'user.db'  # Replace with your actual SQLite database file
 DATABASE_DRIVER = 'drivers.db'
->>>>>>> bca4bcb8467a83e636b36c3fe78248e09a0e22f2
 
 # Helper function to create and return a database connection
 def create_connection_user():
@@ -61,10 +57,8 @@ def create_table_user():
             id INTEGER PRIMARY KEY,
             name TEXT,
             age INTEGER,
-<<<<<<< HEAD
             long REAL,
-            lat REAL
-=======
+            lat REAL,
             gender TEXT          
         )
         ''')
@@ -81,25 +75,17 @@ def create_table_driver():
             name TEXT,
             age INTEGER,
             autonumber INT          
->>>>>>> bca4bcb8467a83e636b36c3fe78248e09a0e22f2
         )
         ''')
         conn.commit()
         conn.close()
 
 # Function to insert user data into the database
-<<<<<<< HEAD
-def insert_user(name, age ,long , lat):
-    conn = create_connection()
-    if conn:
-        cursor = conn.cursor()
-        cursor.execute('INSERT INTO users (name, age,long,lat) VALUES (?, ? ,? ,?)', (name, age ,long , lat))
-=======
-def insert_user(name, age, gender):
+def insert_user(name, age ,long , lat,gender):
     conn = create_connection_user()
     if conn:
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO users (name, age, gender) VALUES (?, ?, ?)', (name, age, gender))
+        cursor.execute('INSERT INTO users (name, age, gender) VALUES (?, ?, ?, ?, ?)', (name, age,long ,lat,gender))
 
         conn.commit()
         conn.close()
@@ -110,7 +96,6 @@ def insert_driver(name, age, autonumber):
         cursor = conn.cursor()
         cursor.execute('INSERT INTO driver (name, age, autonumber) VALUES (?, ?, ?)', (name, age, autonumber))
 
->>>>>>> bca4bcb8467a83e636b36c3fe78248e09a0e22f2
         conn.commit()
         conn.close()
 
@@ -141,16 +126,12 @@ def get_driver():
 def display_users():
     users = get_all_users()
     for user in users:
-<<<<<<< HEAD
-        print(f"ID: {user['id']}, Name: {user['name']}, Age: {user['age']}, Location: ({user['long']}, {user['lat']})")
-=======
-        print(f"ID: {user['id']}, Name: {user['name']}, Age: {user['age']}, Gender: {user['gender']}")
+        print(f"ID: {user['id']}, Name: {user['name']}, Age: {user['age']}, Location: ({user['long']}, {user['lat']}), Gender: {user['gender']}")
 
 def display_driver():
     driver = get_driver()
     for drivers in driver:
         print(f"ID: {drivers['id']}, Name: {drivers['name']}, Age: {drivers['age']}, AutoNumber: {drivers['autonumber']}")
->>>>>>> bca4bcb8467a83e636b36c3fe78248e09a0e22f2
 
 # Call create_table() to ensure table exists when the script runs
 create_table_user()

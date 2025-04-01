@@ -56,7 +56,7 @@ import 'package:flutter/material.dart';
 import 'user.dart';
 import 'driver.dart';
 import 'map.dart';
-<<<<<<< HEAD
+import 'driver_main_page.dart';
 import 'Functionalities/location_detector.dart';
 enum UserType{
   user,
@@ -70,12 +70,6 @@ void main()  {
   //locationService.startTracking(cont:true);
   // Check permissions and start tracking
   runApp(MyApp());
-=======
-import 'driver_main_page.dart';
-
-void main() {
-  runApp(const MyApp());
->>>>>>> bca4bcb8467a83e636b36c3fe78248e09a0e22f2
 }
 
 
@@ -205,6 +199,13 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: Text('View Map as Driver'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                locationService.startTracking(cont: true); // Start continuous tracking
+                print('Started continuous location tracking and sending to backend.');
+              },
+              child: Text('Start Continuous Tracking'),
             ),
             ElevatedButton(
               onPressed: () {
