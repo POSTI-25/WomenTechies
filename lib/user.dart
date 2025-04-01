@@ -68,6 +68,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
   Future<void> _submit() async {
     String name = _nameController.text;
     String age = _ageController.text;
+    String gender = _genderController.text;
 
     // Validate input
     if (name.isEmpty || age.isEmpty) {
@@ -83,6 +84,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
         body: json.encode({
           'name': name,
           'age': age,
+          'gender' : gender,
         }),
       );
 

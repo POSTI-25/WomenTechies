@@ -14,16 +14,19 @@ def add_user():
 
         name = data.get('name')
         age = data.get('age')
+        gender = data.get('gender')
         
-        testing.insert_user(name , age)
-        testing.display_users()
+        # testing.insert_user(name , age, gender)
+        # testing.display_users()
         # Validate input
         if not name or not age:
             return jsonify({"error": "Both name and age are required"}), 400
 
+        testing.insert_user(name, age, gender)
+        testing.display_users()
         # Store the user data in memory (you can store it in a file/database)
-        user_data.append({'name': name, 'age': age})
-
+        user_data.append({'name': name, 'age': age, 'gender':gender})
+        
         # Return success message
         return jsonify({"message": "User data saved successfully!"}), 200
 
