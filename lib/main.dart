@@ -56,6 +56,7 @@ import 'package:flutter/material.dart';
 import 'user.dart';
 import 'driver.dart';
 import 'map.dart';
+import 'driver_main_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -118,6 +119,7 @@ class HomePage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 45),
+            
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -140,6 +142,8 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            
+            
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -162,6 +166,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20), // Add spacing
+          
             ElevatedButton( // Add this new button
               onPressed: () {
                 Navigator.push(
@@ -169,7 +174,19 @@ class HomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => MapScreen()),
                 );
               },
-              child: Text('View Map'),
+              child: Text('View Map as User'),
+            ),
+            
+            SizedBox(height: 20), // Add spacing
+            
+            ElevatedButton( // Add this new button
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EnhancedMapScreen()),
+                );
+              },
+              child: Text('View Map as Driver'),
             ),
           ],
         ),
