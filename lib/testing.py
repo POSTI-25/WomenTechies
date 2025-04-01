@@ -1,8 +1,8 @@
 import firebase_admin
 from firebase_admin import credentials, db
-
+import os
 # Path to your service account key file (update this with the correct path)
-cred = credentials.Certificate('C:/GitProjects/WomenTechies/lib/womentechies-83a98-firebase-adminsdk-fbsvc-974067c166.json')
+cred = credentials.Certificate('C:\GitProjects\womentechies-83a98-firebase-adminsdk-fbsvc-974067c166.json')
 
 # Initialize Firebase app with the correct database URL
 firebase_admin.initialize_app(cred, {
