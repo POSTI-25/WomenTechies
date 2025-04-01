@@ -25,7 +25,7 @@
 import sqlite3
 import threading
 
-DATABASE = 'example.db'  # Replace with your actual SQLite database file
+DATABASE = 'users.db'  # Replace with your actual SQLite database file
 
 # Helper function to create and return a database connection
 def create_connection():
@@ -46,18 +46,20 @@ def create_table():
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY,
             name TEXT,
-            age INTEGER
+            age INTEGER,
+            long REAL,
+            lat REAL
         )
         ''')
         conn.commit()
         conn.close()
 
 # Function to insert user data into the database
-def insert_user(name, age):
+def insert_user(name, age ,long , lat):
     conn = create_connection()
     if conn:
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO users (name, age) VALUES (?, ?)', (name, age))
+        cursor.execute('INSERT INTO users (name, age,long,lat) VALUES (?, ? ,? ,?)', (name, age ,long , lat))
         conn.commit()
         conn.close()
 
@@ -77,7 +79,7 @@ def get_all_users():
 def display_users():
     users = get_all_users()
     for user in users:
-        print(f"ID: {user['id']}, Name: {user['name']}, Age: {user['age']}")
+        print(f"ID: {user['id']}, Name: {user['name']}, Age: {user['age']}, Location: ({user['long']}, {user['lat']})")
 
 # Call create_table() to ensure table exists when the script runs
 create_table()

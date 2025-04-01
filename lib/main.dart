@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 import 'user.dart';
 import 'driver.dart';
 import 'map.dart';
+import 'Functionalities/location_detector.dart';
+enum UserType{
+  user,
+  driver,
+}
+LocationService locationService = LocationService(); // Initialize globally
 
-void main() {
+
+
+void main()  {
+  //locationService.startTracking(cont:true);
+  // Check permissions and start tracking
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -55,6 +66,13 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: Text('View Map'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                locationService.startTracking(cont: true); // Start continuous tracking
+                print('Started continuous location tracking and sending to backend.');
+              },
+              child: Text('Start Continuous Tracking'),
             ),
           ],
         ),
