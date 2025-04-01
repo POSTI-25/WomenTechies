@@ -69,7 +69,7 @@ LocationService locationService = LocationService(); // Initialize globally
 void main()  {
   //locationService.startTracking(cont:true);
   // Check permissions and start tracking
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 
