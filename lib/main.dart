@@ -55,6 +55,7 @@
 import 'package:flutter/material.dart';
 import 'user.dart';
 import 'driver.dart';
+import 'map.dart';
 
 void main() {
   runApp(const MyApp());
@@ -160,9 +161,23 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 20), // Add spacing
+            ElevatedButton( // Add this new button
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapPage()),
+                );
+              },
+              child: Text('View Map'),
+            ),
           ],
         ),
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 0b20ad4d97d484d0b9374c90e5cb5babbe8e3bae
