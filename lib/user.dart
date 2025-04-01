@@ -26,7 +26,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(labelText: 'UserName'),
             ),
             SizedBox(height: 10),
             TextField(
