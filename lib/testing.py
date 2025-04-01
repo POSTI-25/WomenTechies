@@ -1,27 +1,19 @@
-import firebase_admin
-from firebase_admin import credentials, db
-import os
-# Path to your service account key file (update this with the correct path)
-cred = credentials.Certificate('C:\GitProjects\womentechies-83a98-firebase-adminsdk-fbsvc-974067c166.json')
+import sqlite3
+conn = sqlite3.connect('example.db')  # Replace 'example.db' with your database name
+cursor = conn.cursor()  # Create a cursor to interact with the database
 
-# Initialize Firebase app with the correct database URL
-firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://womentechies-83a98-default-rtdb.asia-southeast1.firebasedatabase.app/'  # Replace <your-project-id> with your actual Firebase project ID
-})
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    age INTEGER
+)
+''')
+conn.commit()  # Save changes
+cursor.execute('INSERT INTO users (name, age) VALUES (?, ?)', ('Alice', 25))
+conn.commit()
+cursor.execute('SELECT * FROM users')
+rows = cursor.fetchall()  # Get all rows
+for row in rows:
+    print(row)
 
-# Reference the database path
-ref = db.reference('users')
-
-# Add data to the 'users' node
-ref.push({
-    'name': 'Alice',
-    'email': 'alice@example.com',
-    'age': 25
-})
-ref.push({
-    'name': 'Bob',
-    'email':'bob@example.com',
-    'age': 30
-})
-
-print("Data successfully added to Firebase Realtime Database!")
