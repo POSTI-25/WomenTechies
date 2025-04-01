@@ -62,7 +62,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
   final TextEditingController _genderController = TextEditingController();
 
   // URL of your Flask backend
-  final String apiUrl = 'http://127.0.0.1:5000/add_user';  // Replace with your Flask server's IP if testing on a device
+  final String apiUrl = 'http://localhost:5000/add_user';  // Replace with your Flask server's IP if testing on a device
 
   // Function to send data to the Flask backend
   Future<void> _submit() async {

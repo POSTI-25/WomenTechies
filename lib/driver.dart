@@ -55,6 +55,8 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class DriverLoginPage extends StatefulWidget {
   const DriverLoginPage({super.key});
@@ -67,12 +69,53 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _autoNumberController = TextEditingController();
 
-  void _submit() {
+// URL of your Flask backend
+  final String apiUrl = 'http://localhost:5000/add_driver';  // Replace with your Flask server's IP if testing on a device
+
+  // Function to send data to the Flask backend
+  Future<void> _submit() async {
     String name = _nameController.text;
     String age = _ageController.text;
-    String autoNumber = _autoNumberController.text;
-    print("Name: $name, Age: $age, Auto Number: $autoNumber");
+    String autonumber = _autoNumberController.text;
+
+    // Validate input
+    if (name.isEmpty || age.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter both name and age")));
+      return;
+    }
+
+    // Send POST request
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'name': name,
+          'age': age,
+          'autonumber' : autonumber,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Success
+        print('User data sent successfully!');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data sent successfully!')));
+      } else {
+        // Handle error
+        print('Error: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to send data')));
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to connect to the server')));
+    }
   }
+  // void _submit() {
+  //   String name = _nameController.text;
+  //   String age = _ageController.text;
+  //   String autoNumber = _autoNumberController.text;
+  //   print("Name: $name, Age: $age, Auto Number: $autoNumber");
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +154,7 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
             ),
             SizedBox(height: 10),
             TextField(
-              controller: _nameController,
+              controller: _ageController,
               style: const TextStyle(
                 fontSize: 20, // Increased font size
               ),
@@ -125,7 +168,7 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
             ),
             SizedBox(height: 10),
             TextField(
-              controller: _nameController,
+              controller: _autoNumberController,
               style: const TextStyle(
                 fontSize: 20, // Increased font size
               ),
