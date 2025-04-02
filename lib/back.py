@@ -16,9 +16,9 @@ def add_user():
 
         name = data.get('name')
         age = data.get('age')
-        gender = data.get('gender')
         long = data.get('long')
         lat = data.get('lat')
+        gender = data.get('gender')
         print("working")
         # testing.insert_user(name, age, long, lat, gender)
         # testing.display_users()
@@ -27,7 +27,7 @@ def add_user():
         if not name or not age:
             return jsonify({"error": "Both name and age are required"}), 400
 
-        testing.insert_user(name, age, gender)
+        testing.insert_user(name, age, long,lat,gender)
         testing.display_users()
         # Store the user data in memory (you can store it in a file/database)
         user_data.append({'name': name, 'age': age, 'long': long, 'lat': lat, 'gender':gender})
@@ -87,17 +87,20 @@ def add_driver():
         name = data.get('name')
         age = data.get('age')
         autonumber = data.get('autonumber')
-        
+        lat = data.get('lat')
+        long = data.get('long')
+        print("working_1")
         # testing.insert_user(name , age, gender)
         # testing.display_users()
         # Validate input
         if not name or not age:
             return jsonify({"error": "Both name and age are required"}), 400
 
-        testing.insert_driver(name, age, autonumber)
+        testing.insert_driver(name, age, autonumber,lat,long)
+        print("working_2")
         testing.display_driver()
         # Store the user data in memory (you can store it in a file/database)
-        user_data.append({'name': name, 'age': age, 'autonumber':autonumber})
+        driver_data.append({'name': name, 'age': age, 'autonumber':autonumber,'lat':lat,'long':long})
         
         # Return success message
         return jsonify({"message": "User data saved successfully!"}), 200

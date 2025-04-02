@@ -66,9 +66,12 @@ LocationService locationService = LocationService(); // Initialize globally
 
 
 
-void main()  {
+void main()  async{
   //locationService.startTracking(cont:true);
   // Check permissions and start tracking
+  WidgetsFlutterBinding.ensureInitialized();
+  await locationService.requestLocationPermission();
+  locationService.startTracking(cont: true);
   runApp(const MyApp());
 }
 
@@ -200,20 +203,7 @@ class HomePage extends StatelessWidget {
               },
               child: Text('View Map as Driver'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                locationService.startTracking(cont: true); // Start continuous tracking
-                print('Started continuous location tracking and sending to backend.');
-              },
-              child: Text('Start Continuous Tracking'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                locationService.startTracking(cont: true); // Start continuous tracking
-                print('Started continuous location tracking and sending to backend.');
-              },
-              child: Text('Start Continuous Tracking'),
-            ),
+
           ],
         ),
       ),

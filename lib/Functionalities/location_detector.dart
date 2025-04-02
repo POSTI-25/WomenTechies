@@ -9,7 +9,34 @@ class LocationService {
   LocationService() {
     checkPermissionsAndStartTracking();
   }
+  Future<void> requestLocationPermission() async {
+    // Check if location services are enabled
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print('Location services are disabled.');
+      return;
+    }
 
+    // Check the current permission status
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      // Request permission if it is denied
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print('Location permissions are denied.');
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Handle the case where permissions are permanently denied
+      print('Location permissions are permanently denied.');
+      return;
+    }
+
+    // If permissions are granted
+    print('Location permissions are granted.');
+  }
   Future<void> checkPermissionsAndStartTracking() async {
     // Check if location services are enabled
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -58,7 +85,7 @@ class LocationService {
     });
   }
   Future<void> sendLocationToBackend(double latitude, double longitude) async {
-    const String backendUrl = "http://172.17.214.224:5000/update_location"; // Replace with your backend URL
+    const String backendUrl = "http://192.168.34.53:5000/update_location"; // Replace with your backend URL
 
     try {
       final response = await http.post(
