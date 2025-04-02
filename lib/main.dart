@@ -58,6 +58,7 @@ import 'driver.dart';
 import 'map.dart';
 import 'driver_main_page.dart';
 import 'Functionalities/location_detector.dart';
+import 'user_main_page.dart';
 enum UserType{
   user,
   driver,
@@ -186,7 +187,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapScreen()),
+                  MaterialPageRoute(builder: (context) => UserPage()),
                 );
               },
               child: Text('View Map as User'),
