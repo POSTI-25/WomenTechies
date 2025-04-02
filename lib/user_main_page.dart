@@ -342,7 +342,15 @@ import 'package:latlong2/latlong.dart';
 import 'package:project/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'Functionalities/saving_userID.dart';
+class UserMainPage extends StatelessWidget{
+  const UserMainPage({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return UserPage();
+  }
+}
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
 
@@ -515,6 +523,10 @@ class _MapScreenState extends State<UserPage> {
               ],
             ),
           ),
+          ElevatedButton(onPressed: () async{
+            await removeData('id');
+            await removeData('user_type');
+          }, child: Text('clear data'))
         ],
       ),
     );
