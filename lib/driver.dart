@@ -57,7 +57,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'Functionalities/location_detector.dart';
 class DriverLoginPage extends StatefulWidget {
   const DriverLoginPage({super.key});
   @override
@@ -68,16 +68,17 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _autoNumberController = TextEditingController();
-
+  LocationService driver_loc= LocationService();
 // URL of your Flask backend
-  final String apiUrl = 'http://localhost:5000/add_driver';  // Replace with your Flask server's IP if testing on a device
+  final String apiUrl = 'http://192.168.34.53:5000/add_driver';  // Replace with your Flask server's IP if testing on a device
 
   // Function to send data to the Flask backend
   Future<void> _submit() async {
     String name = _nameController.text;
     String age = _ageController.text;
     String autonumber = _autoNumberController.text;
-
+    double lat=0.0;
+    double long=0.0;
     // Validate input
     if (name.isEmpty || age.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter both name and age")));
@@ -93,6 +94,8 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
           'name': name,
           'age': age,
           'autonumber' : autonumber,
+          'lat': lat,
+          'long': long
         }),
       );
 

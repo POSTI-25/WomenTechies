@@ -57,11 +57,24 @@ import 'user.dart';
 import 'driver.dart';
 import 'map.dart';
 import 'driver_main_page.dart';
-// import 'user_main_page.dart';
+import 'Functionalities/location_detector.dart';
+enum UserType{
+  user,
+  driver,
+}
+LocationService locationService = LocationService(); // Initialize globally
 
-void main() {
+
+
+void main()  async{
+  //locationService.startTracking(cont:true);
+  // Check permissions and start tracking
+  WidgetsFlutterBinding.ensureInitialized();
+  await locationService.requestLocationPermission();
+  locationService.startTracking(cont: true);
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -190,6 +203,7 @@ class HomePage extends StatelessWidget {
               },
               child: Text('View Map as Driver'),
             ),
+
           ],
         ),
       ),
