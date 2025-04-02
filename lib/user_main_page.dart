@@ -156,22 +156,28 @@ class _UserPageState extends State<UserPage> {
                                       height: 40,
                                     ),
                                     Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(4),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black26,
-                                            blurRadius: 2,
-                                          )
-                                        ],
-                                      ),
+                                    width: 50, // Constrains width to prevent overflow
+                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(4),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 2,
+                                        )
+                                      ],
+                                    ),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
                                       child: Text(
                                         "Auto ${index + 1}",
-                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
+                                  ),
+
                                   ],
                                 ),
                               )),
