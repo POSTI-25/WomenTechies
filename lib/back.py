@@ -33,7 +33,7 @@ def add_user():
         user_data.append({'name': name, 'age': age, 'long': long, 'lat': lat, 'gender':gender})
         
         # Return success message
-        return jsonify({"message": "User data saved successfully!",'id':id}), 200
+        return jsonify({"message": "User data saved successfully!",'id':id }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -103,7 +103,7 @@ def add_driver():
         driver_data.append({'name': name, 'age': age, 'autonumber':autonumber,'lat':lat,'long':long})
         
         # Return success message
-        return jsonify({"message": "User data saved successfully!"}), 200
+        return jsonify({"message": "User data saved successfully!" , 'id':id}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

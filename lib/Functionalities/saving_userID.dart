@@ -26,6 +26,7 @@ Future<String?> getData(String key) async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getString(key);
 }
+// 'id' 'user_type'
 Future<void> removeData(String key) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.remove(key); // Removes the value associated with the key
