@@ -51,6 +51,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'Functionalities/location_detector.dart'; // Import your location service
 import 'Functionalities/saving_userID.dart'; // Import your saving user ID service
+import 'package:project/user_main_page.dart'; // Import your user main page
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -102,7 +103,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
     String userType = "user"; // Manually set type
         await saveData('user_type', 'user');
         await saveData('id',userId.toString());
-
+        
     print('User ID: $userId, Type: $userType');
         // Success
         print('User data sent successfully!');
@@ -117,7 +118,12 @@ class _UserLoginPageState extends State<UserLoginPage> {
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to connect to the server')));
     }
-
+    if(await saveDataIfKeyDoesNotExist('id', 'user_type')){
+      Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserMainPage()),
+                );
+      }// Navigate to user main page
   }
 
   @override
