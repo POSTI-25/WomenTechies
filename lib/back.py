@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify
-import testing
+from flask_cors import CORS
+import sqlite3
+import threading
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -70,47 +73,56 @@ def update_location():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/get_locations', methods=['GET'])
-def get_locations():
-    return jsonify({"locations": location_data}), 200
+@app.route('/driver/requests/<driver_id>', methods=['GET'])
+def get_driver_requests(driver_id):
+    driver_requests = {
+        k: v for k, v in active_requests.items() 
+        if v['driver_id'] == driver_id and v['status'] == 'pending'
+    }
+    return jsonify(list(driver_requests.values())), 200
 
-
-
-
-
-@app.route('/add_driver', methods=['POST'])
-def add_driver():
-    try:
-        # Get data from request (should be a JSON object)
-        data = request.get_json()
-
-        name = data.get('name')
-        age = data.get('age')
-        autonumber = data.get('autonumber')
-        lat = data.get('lat')
-        long = data.get('long')
-        print("working_1")
-        # testing.insert_user(name , age, gender)
-        # testing.display_users()
-        # Validate input
-        if not name or not age:
-            return jsonify({"error": "Both name and age are required"}), 400
-
-        testing.insert_driver(name, age, autonumber,lat,long)
-        print("working_2")
-        testing.display_driver()
-        # Store the user data in memory (you can store it in a file/database)
-        driver_data.append({'name': name, 'age': age, 'autonumber':autonumber,'lat':lat,'long':long})
+@app.route('/respond_ride', methods=['POST'])
+def respond_ride():
+    data = request.get_json()
+    request_id = data.get('request_id')
+    
+    if request_id not in active_requests:
+        return jsonify({"error": "Invalid request ID"}), 404
+    
+    if data.get('action') == 'accept':
+        active_requests[request_id]['status'] = 'accepted'
+        # Store in database
+        conn = get_db()
+        conn.execute('''
+            INSERT INTO rides (request_id, user_id, driver_id, status, pickup_location) 
+            VALUES (?, ?, ?, ?, ?)
+        ''', (
+            request_id,
+            active_requests[request_id]['user_id'],
+            active_requests[request_id]['driver_id'],
+            'accepted',
+            str(active_requests[request_id]['pickup_location'])
+        ))
+        conn.commit()
+        conn.close()
         
-        # Return success message
-        return jsonify({"message": "User data saved successfully!"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/get_driver', methods=['GET'])
-def get_driver():
-    return jsonify({"driver": driver_data}), 200
+        return jsonify({"message": "Ride accepted"}), 200
+    else:
+        active_requests[request_id]['status'] = 'rejected'
+        return jsonify({"message": "Ride rejected"}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Initialize database
+    with get_db() as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS rides (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                request_id TEXT UNIQUE,
+                user_id TEXT,
+                driver_id TEXT,
+                status TEXT,
+                pickup_location TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+    app.run(host='0.0.0.0', port=5000, debug=True)

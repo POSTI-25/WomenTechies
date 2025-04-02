@@ -3,7 +3,8 @@ import 'user.dart';
 import 'driver.dart';
 import 'map.dart';
 import 'driver_main_page.dart';
-
+import 'user_main_page.dart';
+import 'driver_main_page.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -97,7 +98,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapScreen()),
+                  MaterialPageRoute(builder: (context) => UserMainPage()),
                 );
               },
               child: Text('View Map as User'),
@@ -109,7 +110,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EnhancedMapScreen()),
+                  MaterialPageRoute(builder: (context) => DriverMainPage()),
                 );
               },
               child: Text('View Map as Driver'),
