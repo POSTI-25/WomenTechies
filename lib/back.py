@@ -1,116 +1,97 @@
 from flask import Flask, request, jsonify
-import testing
+from flask_cors import CORS
+import sqlite3
+import threading
+from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)
 
-# In-memory storage for simplicity (you can replace this with a database or file)
-user_data = []
-location_data = []  # New list to store location updates
-driver_data = []
+# Database setup
+DATABASE = 'autowala.db'
 
-@app.route('/add_user', methods=['POST'])
-def add_user():
-    try:
-        # Get data from request (should be a JSON object)
-        data = request.get_json()
+def get_db():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
 
-        name = data.get('name')
-        age = data.get('age')
-        long = data.get('long')
-        lat = data.get('lat')
-        gender = data.get('gender')
-        print("working")
-        # testing.insert_user(name, age, long, lat, gender)
-        # testing.display_users()
+# Active ride requests storage
+active_requests = {}
 
-        # Validate input
-        if not name or not age:
-            return jsonify({"error": "Both name and age are required"}), 400
+@app.route('/request_ride', methods=['POST'])
+def request_ride():
+    data = request.get_json()
+    
+    # Validate required fields
+    required_fields = ['user_id', 'driver_id', 'pickup_location']
+    if not all(field in data for field in required_fields):
+        return jsonify({"error": "Missing required fields"}), 400
+    
+    # Store the request
+    request_id = f"req_{data['user_id']}_{data['driver_id']}"
+    active_requests[request_id] = {
+        'user_id': data['user_id'],
+        'driver_id': data['driver_id'],
+        'pickup_location': data['pickup_location'],
+        'status': 'pending',
+        'timestamp': datetime.now().isoformat()
+    }
+    
+    return jsonify({
+        "request_id": request_id,
+        "message": "Ride request sent to driver"
+    }), 200
 
-        testing.insert_user(name, age, long,lat,gender)
-        testing.display_users()
-        # Store the user data in memory (you can store it in a file/database)
-        user_data.append({'name': name, 'age': age, 'long': long, 'lat': lat, 'gender':gender})
+@app.route('/driver/requests/<driver_id>', methods=['GET'])
+def get_driver_requests(driver_id):
+    driver_requests = {
+        k: v for k, v in active_requests.items() 
+        if v['driver_id'] == driver_id and v['status'] == 'pending'
+    }
+    return jsonify(list(driver_requests.values())), 200
+
+@app.route('/respond_ride', methods=['POST'])
+def respond_ride():
+    data = request.get_json()
+    request_id = data.get('request_id')
+    
+    if request_id not in active_requests:
+        return jsonify({"error": "Invalid request ID"}), 404
+    
+    if data.get('action') == 'accept':
+        active_requests[request_id]['status'] = 'accepted'
+        # Store in database
+        conn = get_db()
+        conn.execute('''
+            INSERT INTO rides (request_id, user_id, driver_id, status, pickup_location) 
+            VALUES (?, ?, ?, ?, ?)
+        ''', (
+            request_id,
+            active_requests[request_id]['user_id'],
+            active_requests[request_id]['driver_id'],
+            'accepted',
+            str(active_requests[request_id]['pickup_location'])
+        ))
+        conn.commit()
+        conn.close()
         
-        # Return success message
-        return jsonify({"message": "User data saved successfully!"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/get_users', methods=['GET'])
-def get_users():
-    return jsonify({"users": user_data}), 200
-
-# New endpoint to receive location data
-@app.route('/update_location', methods=['POST'])
-def update_location():
-    try:
-        # Get location data from request (should be a JSON object)
-        data = request.get_json()
-
-        #user_id = data.get('user_id')  # You can associate location data with a user
-        lat = data.get('lat')
-        long = data.get('long')
-        print("lat: ",lat,"long: ",long)
-
-        # Validate input
-        if not lat or not long:
-            return jsonify({"error": "Both latitude and longitude are required"}), 400
-
-        # Append location data to memory (you can store it in a database)
-        location_data.append({
-            'lat': lat,
-            'long': long
-        })
-
-        # Return success message
-        return jsonify({"message": "Location data received successfully!"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/get_locations', methods=['GET'])
-def get_locations():
-    return jsonify({"locations": location_data}), 200
-
-
-
-
-
-@app.route('/add_driver', methods=['POST'])
-def add_driver():
-    try:
-        # Get data from request (should be a JSON object)
-        data = request.get_json()
-
-        name = data.get('name')
-        age = data.get('age')
-        autonumber = data.get('autonumber')
-        lat = data.get('lat')
-        long = data.get('long')
-        print("working_1")
-        # testing.insert_user(name , age, gender)
-        # testing.display_users()
-        # Validate input
-        if not name or not age:
-            return jsonify({"error": "Both name and age are required"}), 400
-
-        testing.insert_driver(name, age, autonumber,lat,long)
-        print("working_2")
-        testing.display_driver()
-        # Store the user data in memory (you can store it in a file/database)
-        driver_data.append({'name': name, 'age': age, 'autonumber':autonumber,'lat':lat,'long':long})
-        
-        # Return success message
-        return jsonify({"message": "User data saved successfully!"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/get_driver', methods=['GET'])
-def get_driver():
-    return jsonify({"driver": driver_data}), 200
+        return jsonify({"message": "Ride accepted"}), 200
+    else:
+        active_requests[request_id]['status'] = 'rejected'
+        return jsonify({"message": "Ride rejected"}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Initialize database
+    with get_db() as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS rides (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                request_id TEXT UNIQUE,
+                user_id TEXT,
+                driver_id TEXT,
+                status TEXT,
+                pickup_location TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+    app.run(host='0.0.0.0', port=5000, debug=True)

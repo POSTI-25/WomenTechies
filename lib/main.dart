@@ -55,7 +55,6 @@
 import 'package:flutter/material.dart';
 import 'user.dart';
 import 'driver.dart';
-import 'map.dart';
 import 'driver_main_page.dart';
 import 'Functionalities/location_detector.dart';
 import 'user_main_page.dart';
