@@ -224,6 +224,10 @@ class _UserPageState extends State<UserPage> {
             ),
         ],
       ),
+      bottomNavigationBar: ElevatedButton(onPressed: () async{
+        await removeData('id');
+        await removeData('user_type');
+      }, child: Text("Clear Data")),
     );
   }
 }
