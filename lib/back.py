@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+import sqlite3
+import threading
 import testing
 
 app = Flask(__name__)
@@ -113,4 +115,5 @@ def get_driver():
     return jsonify({"driver": driver_data}), 200
 
 if __name__ == '__main__':
+    # Initialize database
     app.run(debug=True)
