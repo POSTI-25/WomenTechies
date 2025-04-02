@@ -1016,7 +1016,15 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'Functionalities/saving_userID.dart';
+class UserMainPage extends StatelessWidget{
+  const UserMainPage({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return UserPage();
+  }
+}
 class UserPage extends StatefulWidget {
   @override
   _UserPageState createState() => _UserPageState();

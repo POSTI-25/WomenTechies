@@ -5,42 +5,73 @@ import threading
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)
 
-# Database setup
-DATABASE = 'autowala.db'
+# In-memory storage for simplicity (you can replace this with a database or file)
+user_data = []
+location_data = []  # New list to store location updates
+driver_data = []
 
-def get_db():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+@app.route('/add_user', methods=['POST'])
+def add_user():
+    try:
+        # Get data from request (should be a JSON object)
+        data = request.get_json()
 
-# Active ride requests storage
-active_requests = {}
+        name = data.get('name')
+        age = data.get('age')
+        long = data.get('long')
+        lat = data.get('lat')
+        gender = data.get('gender')
+        print("working")
+        # testing.insert_user(name, age, long, lat, gender)
+        # testing.display_users()
 
-@app.route('/request_ride', methods=['POST'])
-def request_ride():
-    data = request.get_json()
-    
-    # Validate required fields
-    required_fields = ['user_id', 'driver_id', 'pickup_location']
-    if not all(field in data for field in required_fields):
-        return jsonify({"error": "Missing required fields"}), 400
-    
-    # Store the request
-    request_id = f"req_{data['user_id']}_{data['driver_id']}"
-    active_requests[request_id] = {
-        'user_id': data['user_id'],
-        'driver_id': data['driver_id'],
-        'pickup_location': data['pickup_location'],
-        'status': 'pending',
-        'timestamp': datetime.now().isoformat()
-    }
-    
-    return jsonify({
-        "request_id": request_id,
-        "message": "Ride request sent to driver"
-    }), 200
+        # Validate input
+        if not name or not age:
+            return jsonify({"error": "Both name and age are required"}), 400
+
+        id=testing.insert_user(name, age, long,lat,gender)
+        testing.display_users()
+        # Store the user data in memory (you can store it in a file/database)
+        user_data.append({'name': name, 'age': age, 'long': long, 'lat': lat, 'gender':gender})
+        
+        # Return success message
+        return jsonify({"message": "User data saved successfully!",'id':id}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/get_users', methods=['GET'])
+def get_users():
+    return jsonify({"users": user_data}), 200
+
+# New endpoint to receive location data
+@app.route('/update_location', methods=['POST'])
+def update_location():
+    try:
+        # Get location data from request (should be a JSON object)
+        data = request.get_json()
+
+        #user_id = data.get('user_id')  # You can associate location data with a user
+        lat = data.get('lat')
+        long = data.get('long')
+        print("lat: ",lat,"long: ",long)
+
+        # Validate input
+        if not lat or not long:
+            return jsonify({"error": "Both latitude and longitude are required"}), 400
+
+        # Append location data to memory (you can store it in a database)
+        location_data.append({
+            'lat': lat,
+            'long': long
+        })
+
+        # Return success message
+        return jsonify({"message": "Location data received successfully!"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/driver/requests/<driver_id>', methods=['GET'])
 def get_driver_requests(driver_id):
