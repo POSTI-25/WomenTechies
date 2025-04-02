@@ -71,7 +71,7 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
   final TextEditingController _autoNumberController = TextEditingController();
   LocationService driver_loc= LocationService();
 // URL of your Flask backend
-  final String apiUrl = 'http://192.168.34.53:5000/add_driver';  // Replace with your Flask server's IP if testing on a device
+  final String apiUrl = 'http://172.17.213.215:5000/add_driver';  // Replace with your Flask server's IP if testing on a device
 
   // Function to send data to the Flask backend
   Future<void> _submit() async {
@@ -80,8 +80,8 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
     String autonumber = _autoNumberController.text;
     double lat=0.0;
     double long=0.0;
-    await saveData('id', '1');
-    await saveData('user_type', 'driver');
+    // await saveData('id', '1');
+    // await saveData('user_type', 'driver');
     // Validate input
     if (name.isEmpty || age.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter both name and age")));
@@ -103,6 +103,15 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
       );
 
       if (response.statusCode == 200) {
+
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        int driverId = responseData['id']; // Retrieve 'id'
+    String driverType = "driver"; // Manually set type
+        await saveData('user_type', 'driver');
+        await saveData('id',driverId.toString());
+
+    print('User ID: $driverId, Type: $driverType');
+
         // Success
         print('User data sent successfully!');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data sent successfully!')));
