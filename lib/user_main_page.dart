@@ -1,4 +1,4 @@
-
+// // //T H I S I S T H E M A I N
 // import 'package:flutter/material.dart';
 // import 'package:flutter_map/flutter_map.dart';
 // import 'package:latlong2/latlong.dart';
@@ -130,6 +130,7 @@
 //       locationMarkers.add(latlng);
 //     });
 
+
 //     // Show the exact coordinates in a snackbar for debugging
 //     ScaffoldMessenger.of(context).showSnackBar(
 //       SnackBar(
@@ -145,6 +146,49 @@
 //       getCoordinates();
 //     }
 //   }
+
+  
+//     void _drawRouteToUser(LatLng selectedPoint) async {
+//   setState(() {
+//     isLoading = true;
+//     currentSegmentPoints = [];
+//   });
+
+//   try {
+//     final userCoords = LatLng(12.972222, 79.138333); // User's fixed location
+//     final startCoords = "${selectedPoint.longitude.toStringAsFixed(6)},${selectedPoint.latitude.toStringAsFixed(6)}";
+//     final endCoords = "${userCoords.longitude.toStringAsFixed(6)},${userCoords.latitude.toStringAsFixed(6)}";
+
+//     var response = await http.get(getRouteUrl(startCoords, endCoords));
+
+//     if (response.statusCode == 200) {
+//       var data = jsonDecode(response.body);
+//       final coordinates = data['features'][0]['geometry']['coordinates'];
+
+//       if (coordinates is List && coordinates.isNotEmpty) {
+//         setState(() {
+//           currentSegmentPoints = coordinates
+//               .map((p) => LatLng(double.parse(p[1].toString()), double.parse(p[0].toString())))
+//               .toList();
+          
+//           // Add route to the map
+//           routePoints = [...currentSegmentPoints];
+//         });
+
+//         _adjustMapView();
+//       }
+//     } else {
+//       throw Exception('Failed to load route: ${response.statusCode}');
+//     }
+//   } catch (e) {
+//     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+//   } finally {
+//     setState(() {
+//       isLoading = false;
+//     });
+//   }
+// }
+    
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -182,6 +226,20 @@
 //               style: TextStyle(fontSize: 18, color: Colors.white),
 //             ),
 //           ),
+
+
+// // GestureDetector(
+// //       onTap: () {
+// //         print("Image outside the map tapped!");
+// //       },
+// //       child: Image.asset(
+// //         'assets/images/autowala_logo.png',
+// //         width: 100,
+// //         height: 100,
+// //       ),
+// //     ),
+
+
 
 //           // FlutterMap widget for the map
 //           Expanded(
@@ -238,11 +296,81 @@
 //                         width: 50,
 //                         height: 50,
 //                         builder:
-//                             (context) => Image.asset('assets/images/autowala_logo.png'),
+//                             (context) => GestureDetector(
+//                               onTap: () => _drawRouteToUser(coord),
+//                             child: Image.asset('assets/images/autowala_logo.png'),
+//                             ),
 //                       ),
 //                     ),
 //                   ],
 //                 ),
+
+// // MarkerLayer(
+// //   markers: [
+// //     // Existing location markers
+// //     ...locationMarkers.asMap().entries.map((entry) {
+// //       final index = entry.key;
+// //       final point = entry.value;
+// //       return Marker(
+// //         point: point,
+// //         width: 80,
+// //         height: 80,
+// //         builder: (context) => IgnorePointer(
+// //           ignoring: false, // Allows the tap event to pass through
+// //           child: GestureDetector(
+// //             onTap: () {
+// //               print("Location pin tapped at: $point");
+// //             },
+// //             child: Icon(
+// //               Icons.location_pin,
+// //               color: index == 0
+// //                   ? Colors.green
+// //                   : (index == locationMarkers.length - 1
+// //                       ? Colors.red
+// //                       : Colors.blue),
+// //               size: 45,
+// //             ),
+// //           ),
+// //         ),
+// //       );
+// //     }).toList(),
+
+// //     // Dummy icons at fixed locations
+// //     if (showDummyIcons)
+// //       ...[
+// //         LatLng(12.9758527, 79.137239),
+// //         LatLng(12.958831, 79.137249),
+// //         LatLng(12.975635, 79.093810),
+// //       ].map(
+// //         (coord) => Marker(
+// //           point: coord,
+// //           width: 100, // Increase tap area
+// //           height: 100,
+// //           builder: (context) => IgnorePointer(
+// //             ignoring: false, // Ensures tap works
+// //             child: GestureDetector(
+// //               onTap: () {
+// //                 print("Auto tapped at: $coord");
+// //                 _drawRouteToUser(coord);
+// //               },
+// //               child: Container(
+// //                 width: 80,
+// //                 height: 80,
+// //                 alignment: Alignment.center,
+// //                 child: Image.asset(
+// //                   'assets/images/autowala_logo.png',
+// //                   width: 60,
+// //                   height: 60,
+// //                 ),
+// //               ),
+// //             ),
+// //           ),
+// //         ),
+// //       ),
+// //   ],
+// // ),
+
+
 
 //                 PolylineLayer(
 //                   polylineCulling: false,
@@ -336,98 +464,241 @@
 // }
 
 
+
+
+
+
+// ///////////////////////////////////////////////////////////////////
+// import 'package:flutter/material.dart';
+// import 'package:flutter_map/flutter_map.dart';
+// import 'package:latlong2/latlong.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+
+// class UserPage extends StatefulWidget {
+//   @override
+//   _UserPageState createState() => _UserPageState();
+// }
+
+// class _UserPageState extends State<UserPage> {
+//   final MapController _mapController = MapController();
+//   bool showAutos = false;
+//   List<LatLng> autoLocations = [
+//     LatLng(12.9758527, 79.137239),
+//     LatLng(12.958831, 79.137249),
+//     LatLng(12.975635, 79.093810),
+//   ];
+//   List<LatLng> routePoints = [];
+//   LatLng userLocation = LatLng(12.972222, 79.138333);
+
+//   TextEditingController _destinationController = TextEditingController();
+//   String _destination = "";
+
+//   void _onDestinationPressed() {
+//     setState(() {
+//       _destination = _destinationController.text;
+//       showAutos = true; // Show auto icons and FABs when search is pressed
+//     });
+//     print("Destination: $_destination");
+//   }
+
+//   void _drawRouteFromAuto(int index) {
+//     setState(() {
+//       routePoints = [autoLocations[index], userLocation];
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       floatingActionButton: showAutos
+//           ? Column(
+//               mainAxisAlignment: MainAxisAlignment.end,
+//               crossAxisAlignment: CrossAxisAlignment.end,
+//               children: List.generate(autoLocations.length, (index) {
+//                 return Padding(
+//                   padding: const EdgeInsets.only(bottom: 10),
+//                   child: FloatingActionButton(
+//                     heroTag: 'auto$index',
+//                     onPressed: () => _drawRouteFromAuto(index),
+//                     child: Text("Auto ${index + 1}"),
+//                   ),
+//                 );
+//               }),
+//             )
+//           : null,
+//       body: Column(
+//         children: [
+//           Padding(
+//             padding: const EdgeInsets.all(20.0),
+//             child: TextField(
+//               controller: _destinationController,
+//               decoration: InputDecoration(
+//                 labelText: "Enter Destination",
+//                 hintText: "Type your destination here",
+//                 border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(8),
+//                   borderSide: BorderSide(color: Colors.blue, width: 1.5),
+//                 ),
+//               ),
+//             ),
+//           ),
+//           ElevatedButton(
+//             onPressed: _onDestinationPressed,
+//             style: ElevatedButton.styleFrom(
+//               backgroundColor: Colors.blue,
+//               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+//               shape: RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(8),
+//               ),
+//             ),
+//             child: Text(
+//               "Search Auto",
+//               style: TextStyle(fontSize: 18, color: Colors.white),
+//             ),
+//           ),
+//           Expanded(
+//             child: FlutterMap(
+//               mapController: _mapController,
+//               options: MapOptions(
+//                 center: userLocation,
+//                 zoom: 15,
+//               ),
+//               children: [
+//                 TileLayer(
+//                   urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+//                   subdomains: ['a', 'b', 'c'],
+//                 ),
+//                 MarkerLayer(
+//                   markers: [
+//                     Marker(
+//                       point: userLocation,
+//                       builder: (ctx) => Icon(Icons.person_pin, color: Colors.blue, size: 40),
+//                     ),
+//                     if (showAutos)
+//                       ...List.generate(autoLocations.length, (index) => Marker(
+//                             point: autoLocations[index],
+//                             width: 100,
+//                             height: 60,
+//                             builder: (ctx) => Column(
+//                               mainAxisSize: MainAxisSize.min,
+//                               children: [
+//                                 Image.asset(
+//                                   'assets/images/autowala_logo.png',
+//                                   width: 40,
+//                                   height: 40,
+//                                 ),
+//                                 Container(
+//                                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+//                                   decoration: BoxDecoration(
+//                                     color: Colors.white,
+//                                     borderRadius: BorderRadius.circular(4),
+//                                     boxShadow: [
+//                                       BoxShadow(
+//                                         color: Colors.black26,
+//                                         blurRadius: 2,
+//                                       )
+//                                     ],
+//                                   ),
+//                                   child: Text(
+//                                     "Auto ${index + 1}",
+//                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+//                                   ),
+//                                 ),
+//                               ],
+//                             ),
+//                           )),
+//                   ],
+//                 ),
+//                 if (routePoints.isNotEmpty)
+//                   PolylineLayer(
+//                     polylines: [
+//                       Polyline(
+//                         points: routePoints,
+//                         color: Colors.red,
+//                         strokeWidth: 4.0,
+//                       ),
+//                     ],
+//                   ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//////////////////////////////////
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:project/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class UserPage extends StatefulWidget {
-  const UserPage({super.key});
-
   @override
-  State<UserPage> createState() => _MapScreenState();
+  _UserPageState createState() => _UserPageState();
 }
 
-class _MapScreenState extends State<UserPage> {
-  List<LatLng> routePoints = [];
-  List<LatLng> currentSegmentPoints = [];
-  List<LatLng> locationMarkers = [];
-  bool isLoading = false;
-  bool showDummyIcons = false;
+class _UserPageState extends State<UserPage> {
   final MapController _mapController = MapController();
-
-  TextEditingController _destinationController = TextEditingController();
-  String _destination = "";
-
-  List<LatLng> dummyLocations = [
+  bool showAutos = false;
+  List<LatLng> autoLocations = [
     LatLng(12.9758527, 79.137239),
     LatLng(12.958831, 79.137249),
     LatLng(12.975635, 79.093810),
   ];
+  List<LatLng> routePoints = [];
+  LatLng userLocation = LatLng(12.972222, 79.138333);
 
-  LatLng destination = LatLng(12.972222, 79.138333);
-  List<List<LatLng>> polylines = [];
-
-  @override
-  void initState() {
-    super.initState();
-    locationMarkers.add(destination);
-  }
+  TextEditingController _destinationController = TextEditingController();
+  String _destination = "";
 
   void _onDestinationPressed() {
     setState(() {
       _destination = _destinationController.text;
-      showDummyIcons = true;
-      _fetchRoutesForAutos();
+      showAutos = true;
     });
-
     print("Destination: $_destination");
   }
 
-  Future<void> _fetchRoutesForAutos() async {
-    polylines.clear();
+  Future<void> _fetchRoute(LatLng start, LatLng end) async {
+    final String apiUrl = "https://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=simplified&geometries=geojson";
 
-    for (LatLng autoLocation in dummyLocations) {
-      List<LatLng> route = await _fetchRoute(autoLocation, destination);
+    final response = await http.get(Uri.parse(apiUrl));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List coordinates = data['routes'][0]['geometry']['coordinates'];
       setState(() {
-        polylines.add(route);
+        routePoints = coordinates.map((coord) => LatLng(coord[1], coord[0])).toList();
       });
+    } else {
+      print("Failed to load route");
     }
-  }
-
-  Future<List<LatLng>> _fetchRoute(LatLng start, LatLng end) async {
-    try {
-      String startCoords =
-          "${start.longitude.toStringAsFixed(6)},${start.latitude.toStringAsFixed(6)}";
-      String endCoords =
-          "${end.longitude.toStringAsFixed(6)},${end.latitude.toStringAsFixed(6)}";
-
-      var response = await http.get(getRouteUrl(startCoords, endCoords));
-
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        final coordinates = data['features'][0]['geometry']['coordinates'];
-
-        if (coordinates is List && coordinates.isNotEmpty) {
-          return coordinates
-              .map((p) => LatLng(
-                    double.parse(p[1].toString()),
-                    double.parse(p[0].toString()),
-                  ))
-              .toList();
-        }
-      }
-    } catch (e) {
-      print("Error fetching route: $e");
-    }
-    return [];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: showAutos
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: List.generate(autoLocations.length, (index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: FloatingActionButton(
+                    heroTag: 'auto$index',
+                    onPressed: () => _fetchRoute(autoLocations[index], userLocation),
+                    child: Text("Auto ${index + 1}"),
+                  ),
+                );
+              }),
+            )
+          : null,
       body: Column(
         children: [
           Padding(
@@ -444,7 +715,6 @@ class _MapScreenState extends State<UserPage> {
               ),
             ),
           ),
-
           ElevatedButton(
             onPressed: _onDestinationPressed,
             style: ElevatedButton.styleFrom(
@@ -459,59 +729,70 @@ class _MapScreenState extends State<UserPage> {
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
-
           Expanded(
             child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
+                center: userLocation,
                 zoom: 15,
-                center: locationMarkers.first,
-                interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
               ),
               children: [
                 TileLayer(
-                  urlTemplate:
-                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                   subdomains: ['a', 'b', 'c'],
-                  userAgentPackageName: 'com.example.app',
-                  maxZoom: 19,
                 ),
-
                 MarkerLayer(
                   markers: [
-                    ...locationMarkers.map((point) => Marker(
-                          point: point,
-                          width: 50,
-                          height: 50,
-                          builder: (context) => Icon(
-                            Icons.location_pin,
-                            color: Colors.red,
-                            size: 50,
-                          ),
-                        )),
-
-                    if (showDummyIcons)
-                      ...dummyLocations.map((coord) => Marker(
-                            point: coord,
-                            width: 50,
-                            height: 50,
-                            builder: (context) =>
-                                Image.asset('assets/images/autowala_logo.png'),
+                    Marker(
+                      point: userLocation,
+                      builder: (ctx) => Icon(Icons.person_pin, color: Colors.blue, size: 40),
+                    ),
+                    if (showAutos)
+                      ...List.generate(autoLocations.length, (index) => Marker(
+                            point: autoLocations[index],
+                            width: 100,
+                            height: 60,
+                            builder: (ctx) => Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  'assets/images/autowala_logo.png',
+                                  width: 40,
+                                  height: 40,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 2,
+                                      )
+                                    ],
+                                  ),
+                                  child: Text(
+                                    "Auto ${index + 1}",
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
                           )),
                   ],
                 ),
-
-                if (polylines.isNotEmpty)
-                  PolylineLayer(
-                    polylineCulling: false,
-                    polylines: polylines
-                        .map((route) => Polyline(
-                              points: route,
-                              color: Colors.blue,
-                              strokeWidth: 4.0,
-                            ))
-                        .toList(),
-                  ),
+                PolylineLayer(
+                  polylineCulling: false,
+                  polylines: [
+                    if (routePoints.isNotEmpty)
+                      Polyline(
+                        points: routePoints,
+                        color: Colors.blue,
+                        strokeWidth: 6,
+                      ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -520,3 +801,4 @@ class _MapScreenState extends State<UserPage> {
     );
   }
 }
+
