@@ -49,6 +49,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'Functionalities/location_detector.dart'; // Import your location service
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -60,14 +61,16 @@ class _UserLoginPageState extends State<UserLoginPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
-
+  LocationService user_loc= LocationService(); // Initialize location service
   // URL of your Flask backend
-  final String apiUrl = 'http://localhost:5000/add_user';  // Replace with your Flask server's IP if testing on a device
+  final String apiUrl = 'http://192.168.34.53:5000/add_user';  // Replace with your Flask server's IP if testing on a device
 
   // Function to send data to the Flask backend
   Future<void> _submit() async {
     String name = _nameController.text;
     String age = _ageController.text;
+    double long=user_loc.longitude;
+    double lat=user_loc.latitude;
     String gender = _genderController.text;
 
     // Validate input
@@ -84,7 +87,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
         body: json.encode({
           'name': name,
           'age': age,
-          'gender' : gender,
+          'long': long,
+          'lat': lat,
+          'gender' : gender
         }),
       );
 
