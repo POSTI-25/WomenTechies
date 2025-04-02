@@ -64,7 +64,7 @@ enum UserType{
   driver,
 }
 LocationService locationService = LocationService(); // Initialize globally
-
+//flask --app back.py run --host=0.0.0.0
 
 
 void main()  async{

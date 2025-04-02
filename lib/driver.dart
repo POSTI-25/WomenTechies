@@ -70,7 +70,7 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
   final TextEditingController _autoNumberController = TextEditingController();
   LocationService driver_loc= LocationService();
 // URL of your Flask backend
-  final String apiUrl = 'http://192.168.34.53:5000/add_driver';  // Replace with your Flask server's IP if testing on a device
+  final String apiUrl = 'http://192.168.231.239:5000/add_driver';  // Replace with your Flask server's IP if testing on a device
 
   // Function to send data to the Flask backend
   Future<void> _submit() async {

@@ -63,7 +63,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
   final TextEditingController _genderController = TextEditingController();
   LocationService user_loc= LocationService(); // Initialize location service
   // URL of your Flask backend
-  final String apiUrl = 'http://192.168.34.53:5000/add_user';  // Replace with your Flask server's IP if testing on a device
+  final String apiUrl = 'http://192.168.231.239:5000/add_user';  // Replace with your Flask server's IP if testing on a device
 
   // Function to send data to the Flask backend
   Future<void> _submit() async {
