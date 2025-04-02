@@ -27,13 +27,13 @@ def add_user():
         if not name or not age:
             return jsonify({"error": "Both name and age are required"}), 400
 
-        testing.insert_user(name, age, long,lat,gender)
+        id=testing.insert_user(name, age, long,lat,gender)
         testing.display_users()
         # Store the user data in memory (you can store it in a file/database)
         user_data.append({'name': name, 'age': age, 'long': long, 'lat': lat, 'gender':gender})
         
         # Return success message
-        return jsonify({"message": "User data saved successfully!"}), 200
+        return jsonify({"message": "User data saved successfully!",'id':id}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
