@@ -64,10 +64,10 @@ def insert_user(name, age ,long , lat,gender):
     if conn:
         cursor = conn.cursor()
         cursor.execute('INSERT INTO users (name, age, long, lat ,gender) VALUES (?, ?, ?, ?, ?)', (name, age,long ,lat,gender))
-
+        last_id = cursor.lastrowid  # Get the last inserted ID
         conn.commit()
         conn.close()
-
+        return last_id
 def insert_driver(name, age, autonumber,lat,long):
     conn = create_connection_driver()
     if conn:

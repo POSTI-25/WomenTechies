@@ -4,7 +4,15 @@ import 'package:latlong2/latlong.dart';
 import 'package:project/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'Functionalities/saving_userID.dart';
+class DriverMainPage extends StatelessWidget{
+  const DriverMainPage({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return EnhancedMapScreen();
+  }
+}
 class EnhancedMapScreen extends StatefulWidget {
   const EnhancedMapScreen({super.key});
 
@@ -210,8 +218,9 @@ class _EnhancedMapScreenState extends State<EnhancedMapScreen> {
                 ),
               ),
         ],
+        
       ),
-      floatingActionButton: acceptedLocations.length >= 2 && routePoints.isNotEmpty
+          floatingActionButton: acceptedLocations.length >= 2 && routePoints.isNotEmpty
           ? FloatingActionButton(
               heroTag: 'distance',
               mini: true,
@@ -225,6 +234,11 @@ class _EnhancedMapScreenState extends State<EnhancedMapScreen> {
               child: const Icon(Icons.straighten, color: Colors.blue),
             )
           : null,
+          bottomNavigationBar:       ElevatedButton(onPressed: () async{
+            await removeData('id');
+            await removeData('user_type');
+          }, child: Text('clear data')),
+          
     );
   }
 

@@ -50,6 +50,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'Functionalities/location_detector.dart'; // Import your location service
+import 'Functionalities/saving_userID.dart'; // Import your saving user ID service
 
 class UserLoginPage extends StatefulWidget {
   const UserLoginPage({super.key});
@@ -72,7 +73,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
     double long=user_loc.longitude;
     double lat=user_loc.latitude;
     String gender = _genderController.text;
-
+    await saveData('user_type', 'user');
+    await saveData('id','1');
     // Validate input
     if (name.isEmpty || age.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter both name and age")));

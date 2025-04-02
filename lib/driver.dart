@@ -58,6 +58,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'Functionalities/location_detector.dart';
+import 'Functionalities/saving_userID.dart';
 class DriverLoginPage extends StatefulWidget {
   const DriverLoginPage({super.key});
   @override
@@ -79,6 +80,8 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
     String autonumber = _autoNumberController.text;
     double lat=0.0;
     double long=0.0;
+    await saveData('id', '1');
+    await saveData('user_type', 'driver');
     // Validate input
     if (name.isEmpty || age.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter both name and age")));
